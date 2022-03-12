@@ -14,5 +14,5 @@
 */
 
 $router->get('/', function () use ($router) {
-    echo 'hello lumen';
+    echo 'hello world';
 });
