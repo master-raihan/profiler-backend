@@ -14,5 +14,23 @@
 */
 
 $router->get('/', function () use ($router) {
-    echo 'hello world testing';
+    return response()->json('success');
 });
+
+$router->get('/version', function () use ($router) {
+    return $router->app->version();
+});
+
+$router->post('/login','AdminController@login');
+
+// Route::group([
+
+//     'prefix' => 'api'
+
+// ], function ($router) {
+//     Route::post('login', 'AdminController@login');
+//     Route::post('logout', 'AdminController@logout');
+//     Route::post('refresh', 'AdminController@refresh');
+//     Route::post('user-profile', 'AdminController@me');
+
+// });
