@@ -11,7 +11,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 //this is new
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Admin extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject 
+class Admin extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable;
 
@@ -36,5 +36,5 @@ class Admin extends Model implements AuthenticatableContract, AuthorizableContra
     }
 
 
-    protected $table = 'admin';
+    protected $table = 'admins';
 }

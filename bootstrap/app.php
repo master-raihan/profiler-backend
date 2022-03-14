@@ -48,6 +48,7 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
@@ -60,7 +61,7 @@ $app->singleton(
 */
 
 $app->configure('app');
-
+$app->configure('csv');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware

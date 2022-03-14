@@ -15,23 +15,48 @@ class CsvParser
         }
     }
 
-    public function read()
+    public function read(bool $isHeaderAvailable = true)
     {
         $parsedValues = array();
         $row = 0;
 
-        if (($handle = fopen($this->path, "r")) !== false)
+        if ($isHeaderAvailable)
         {
-            $headers = fgetcsv($handle, 1000, ",");
-            while (($data = fgetcsv($handle, 1000, ",")) !== false)
+            if (($handle = fopen($this->path, "r")) !== false)
             {
-                $parsedValues[$row] = array_combine($headers, $data);
-                $row++;
+                $headers = fgetcsv($handle, 1000, ",");
+                while (($data = fgetcsv($handle, 1000, ",")) !== false)
+                {
+                    $parsedValues[$row] = array_combine($headers, $data);
+                    $row++;
+                }
+                fclose($handle);
             }
-            fclose($handle);
+        }else{
+            if (($handle = fopen($this->path, "r")) !== false)
+            {
+                while (($data = fgetcsv($handle, 1000, ",")) !== false)
+                {
+                    $parsedValues[$row] = $data;
+                    $row++;
+                }
+                fclose($handle);
+            }
         }
 
         return $parsedValues;
+    }
+
+    public function headings()
+    {
+        $headers = array();
+        if (($handle = fopen($this->path, "r")) !== false)
+        {
+            $headers = fgetcsv($handle, 1000, ",");
+            fclose($handle);
+        }
+
+        return $headers;
     }
 
 }

@@ -25,7 +25,7 @@ class CreateTagContactTable extends Migration
                   ->onDelete('cascade');
 
             $table->foreign('contact_id')
-                  ->references('id')->on('contact')
+                  ->references('id')->on('contacts')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
         });

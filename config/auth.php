@@ -3,18 +3,18 @@
 return [
     'defaults' => [
         'guard' => 'api',
-        'passwords' => 'admin',
+        'passwords' => 'admins',
     ],
 
     'guards' => [
         'api' => [
             'driver' => 'jwt',
-            'provider' => 'admin',
+            'provider' => 'admins',
         ],
     ],
 
     'providers' => [
-        'admin' => [
+        'admins' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Admin::class
         ]
