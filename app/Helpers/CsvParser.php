@@ -43,7 +43,6 @@ class CsvParser
                 fclose($handle);
             }
         }
-
         return $parsedValues;
     }
 

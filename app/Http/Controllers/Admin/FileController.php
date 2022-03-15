@@ -5,70 +5,82 @@ use App\Helpers\CsvParser;
 use App\Http\Controllers\Controller;
 use App\Models\Sample;
 use Illuminate\Http\Request;
-use App\Models\Contact;
-use App\Models\CsvTemp;
+use App\Models\File;
 
 class FileController extends Controller
 {
-
-    public function parseCsv(Request $request)
+    public function uploadCsv(Request $request)
     {
-        $file = new CsvParser();
-        $file->load($request->file('csv_file'));
-
-        if($request->has('header'))
+        if($request->has('csvFile'))
         {
-            $data = $file->read(true);
-            $headings = $file->headings();
-        }else {
-            $data = $file->read(false);
-        }
+            $allowedFileExtension=['csv'];
+            $csvFile = $request->file('csvFile');
+            $extension = $csvFile->getClientOriginalExtension();
+            $check = in_array($extension, $allowedFileExtension);
 
-        if(count($data) > 0)
-        {
-            $tempCsvData = CsvTemp::create([
-                "filename" => $request->file('csv_file')->getClientOriginalName(),
-                "header" => $request->has('header'),
-                "data" => json_encode($data)
-            ]);
+            if($check){
+                $name = time() . '-' .$csvFile->getClientOriginalName();
+                $csvFile->move('csv-files', $name);
+
+                $file = [
+                    'user_id' => 1,
+                    'file_name_location' => 'csv-files/'.$name
+                ];
+                $uploadedCsvFile = File::create($file);
+
+                $file = new CsvParser();
+                $csvFile = File::find($uploadedCsvFile->id);
+                $file->load($csvFile->file_name_location);
+                if($request->has('header'))
+                {
+                    $csvData = $file->read(true);
+                    $headings = $file->headings();
+                }else {
+                    $csvData = $file->read(false);
+                }
+
+                return response()->json(['headings'=>$headings ?? null, 'csvData'=>$csvData, 'csvFile' => $uploadedCsvFile]);
+            }
         }
-        return response()->json(["headings"=>$headings ?? null, "data"=>$data, "tempCsvDataId"=>$tempCsvData->id]);
     }
 
     public function processCsv(Request $request)
     {
-        $tempData = CsvTemp::find($request->tempDataId);
-        $csv_data = json_decode($tempData->data, true);
-
-        foreach ($csv_data as $row) {
-//            $contact = new Contact();
-//
-//            foreach (config('csv.fields') as $index => $field) {
-//                if ($tempData->header) {
-//                    $contact->$field = $row[$request->fields[$field]];
-//                } else {
-//                    if($request->fields[$index] != -1) {
-//                        $contact->$field = $row[$request->fields[$index]];
-//                    }
-//                }
-//            }
-//            $contact->save();
-
-            $sample = new Sample();
+        if($request->has('csvFileId'))
+        {
+            $file = new CsvParser();
+            $csvFile = File::find($request->csvFileId);
+            $file->load($csvFile->file_name_location);
             $response = array();
 
-            foreach (config('csv.fields_sample') as $index => $field) {
-                if ($tempData->header) {
-                    $sample->$field = $row[$request->fields[$field]];
-                } else {
-                    if($request->fields[$index] != -1){
-                        $sample->$field = $row[$request->fields[$index]];
+            if($request->has('header'))
+            {
+                $csvData = $file->read(true);
+                $headings = $file->headings();
+            }else {
+                $csvData = $file->read(false);
+            }
+            foreach ($csvData as $row) {
+                $sample = new Sample();
+
+                foreach (config('csv.fields_sample') as $index => $field) {
+                    if ($request->has('header')) {
+                        if ($request->fields[$field] != -1)
+                        {
+                            $sample->$field = $row[$request->fields[$field]];
+                        }
+                    } else {
+                        if ($request->fields[$index] != -1) {
+                            $sample->$field = $row[$request->fields[$index]];
+                        }
                     }
                 }
+                $sample->save();
+                $response[] = $sample;
             }
-            $sample->save();
         }
 
-        return response()->json($sample);
+        return response()->json($response);
     }
+
 }
