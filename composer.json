@@ -18,7 +18,8 @@
     },
     "autoload": {
         "files": [
-            "app/Helpers/CsvParser.php"
+            "app/Helpers/CsvParser.php",
+            "app/Helpers/UtilityHelper.php"
         ],
         "psr-4": {
             "App\\": "app/",

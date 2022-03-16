@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Repositories\AuthRepository;
 use App\Contracts\Services\AuthContract;
+use App\Helpers\UtilityHelper;
 
 class AuthService implements AuthContract
 {
@@ -16,13 +17,25 @@ class AuthService implements AuthContract
 
     public function login($request)
     {
-        $credentials = $request->only(['email', 'password']);
+        try{
+            $credentials = $request->only(['email', 'password']);
+            if (! $token = $this->authRepository->login($credentials)) {
+                return UtilityHelper::RETURN_ERROR_FORMAT(
+                    401,
+                    'Unauthorized Access!',
+                );
+            }
 
-        if (! $token = $this->authRepository->login($credentials)) {
-            return ['message' => 'Unauthorized'];
+            return UtilityHelper::RETURN_SUCCESS_FORMAT(
+                200,
+                'User Successfully Authenticated!',
+                $this->respondWithToken($token)
+            );
+        }catch (Exception $exception){
+            return UtilityHelper::RETURN_ERROR_FORMAT(
+                500
+            );
         }
-
-        return $this->respondWithToken($token);
     }
 
     protected function respondWithToken($token)
