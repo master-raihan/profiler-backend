@@ -34,7 +34,9 @@ class Admin extends Model implements AuthenticatableContract, AuthorizableContra
     {
         return [];
     }
-
+    protected $hidden = [
+        'password',
+    ];
 
     protected $table = 'admins';
 }
