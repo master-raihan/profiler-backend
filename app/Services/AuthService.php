@@ -2,38 +2,37 @@
 
 namespace App\Services;
 
-use App\Contracts\Repositories\AuthRepository;
 use App\Contracts\Services\AuthContract;
 use App\Helpers\UtilityHelper;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AuthService implements AuthContract
 {
-    private $authRepository;
 
-    public function __construct(AuthRepository $authRepository)
+    public function __construct()
     {
-        $this->authRepository = $authRepository;
+        //
     }
 
     public function login($request)
     {
         try{
             $credentials = $request->only(['email', 'password']);
-            if (! $token = $this->authRepository->login($credentials)) {
+            if (! $token = Auth::attempt($credentials)) {
                 return UtilityHelper::RETURN_ERROR_FORMAT(
-                    401,
+                    ResponseAlias::HTTP_UNAUTHORIZED,
                     'Unauthorized Access!',
                 );
             }
 
-            return UtilityHelper::RETURN_SUCCESS_FORMAT(
-                200,
+            return UtilityHelper::RETURN_SUCCESS_FORMAT(ResponseAlias::HTTP_OK,
                 'User Successfully Authenticated!',
                 $this->respondWithToken($token)
             );
         }catch (Exception $exception){
             return UtilityHelper::RETURN_ERROR_FORMAT(
-                500
+                ResponseAlias::HTTP_BAD_REQUEST
             );
         }
     }

@@ -32,11 +32,10 @@ class UserController extends Controller
 
     public function updateUser(Request $request)
     {
-        if($this->userService->updateUser($request)){
-            return response()->json('User Updated successfully!');
-        }else{
-            return response()->json('User not Updated!');
-        }
+        $response = $this->userService->updateUser($request);
+
+        return response()->json('User Updated successfully!', $response['status']);
+
 
     }
 
