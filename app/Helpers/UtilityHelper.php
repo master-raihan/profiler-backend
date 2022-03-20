@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class UtilityHelper
 {
-    public static function RETURN_SUCCESS_FORMAT($statusCode, $message, $data = [], $insertId = ""): array
+    public static function RETURN_SUCCESS_FORMAT($statusCode, $message, $data = [])
     {
 
         return [
@@ -15,7 +15,7 @@ class UtilityHelper
         ];
     }
 
-    public static function RETURN_ERROR_FORMAT($status_code, $message = "Something is wrong !!"): array
+    public static function RETURN_ERROR_FORMAT($status_code, $message = "Something is wrong !!")
     {
         return [
             'success' => false,

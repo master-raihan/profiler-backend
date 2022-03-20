@@ -17,19 +17,21 @@ class TagController extends Controller
     }
     public function getAllTags()
     {
-        return response()->json($this->tagService->getAllTags(), $this->tagService->getAllTags()['status']);
+        $serviceResponse = $this->tagService->getAllTags();
+        return response()->json($serviceResponse, $serviceResponse['status']);
     }
 
     public function createTag(Request $request)
     {
-        return response()->json($this->tagService->createTag($request), $this->tagService->createTag($request)['status']);
+        $serviceResponse = $this->tagService->createTag($request);
+        return response()->json($serviceResponse, $serviceResponse['status']);
     }
 
 
     public function deleteTag($id)
     {
-
-        return response()->json($this->tagService->deleteTag( (int) $id), $this->tagService->deleteTag( (int) $id)['status']);
+        $serviceResponse = $this->tagService->deleteTag($id);
+        return response()->json($serviceResponse, $serviceResponse['status']);
 
     }
 

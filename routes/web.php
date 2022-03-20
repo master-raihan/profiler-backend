@@ -21,3 +21,8 @@ $router->delete('/users/delete/{id}','Admin\UserController@deleteUser');
 $router->get('/tags','Admin\TagController@getAllTags');
 $router->post('/tags/create','Admin\TagController@createTag');
 $router->delete('/tags/delete/{id}','Admin\TagController@deleteTag');
+
+
+//Admin Routes
+$router->get('/admins', 'AdminController@getAllAdmins');
+

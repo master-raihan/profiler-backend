@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\Services\TagContract;
 use App\Contracts\Repositories\TagRepository;
 use App\Helpers\UtilityHelper;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Validator;
 
 class TagService implements TagContract
@@ -20,13 +21,13 @@ class TagService implements TagContract
     {
         try{
             return UtilityHelper::RETURN_SUCCESS_FORMAT(
-                200,
+                ResponseAlias::HTTP_OK,
                 'All Tags Successfully Fetched!',
                 $this->tagRepository->getAllTags()
             );
         }catch (Exception $exception){
             return UtilityHelper::RETURN_ERROR_FORMAT(
-                500
+                ResponseAlias::HTTP_BAD_REQUEST
             );
         }
     }
@@ -46,13 +47,13 @@ class TagService implements TagContract
                 'tag_value' => $request->tag_value
             ];
             return UtilityHelper::RETURN_SUCCESS_FORMAT(
-                200,
+                ResponseAl,
                 'A Tag Successfully Created!',
                 $this->tagRepository->createTag($tag)
             );
         }catch (Exception $exception){
             return UtilityHelper::RETURN_ERROR_FORMAT(
-                500
+                ResponseAlias::HTTP_BAD_REQUEST
             );
         }
     }
@@ -60,13 +61,13 @@ class TagService implements TagContract
     public function deleteTag($id){
         try{
             return UtilityHelper::RETURN_SUCCESS_FORMAT(
-                200,
+                ResponseAlias::HTTP_OK,
                 'A Tag Successfully Deleted!',
                 $this->tagRepository->deleteTag($id)
             );
         }catch (Exception $exception){
             return UtilityHelper::RETURN_ERROR_FORMAT(
-                500
+                ResponseAlias::HTTP_BAD_REQUEST
             );
         }
     }
